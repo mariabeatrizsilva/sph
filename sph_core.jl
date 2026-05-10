@@ -1,9 +1,9 @@
 module SPHCore
 
-#  sph_core.jl – NYU CS 421 SPH
-#  Original code by Dr. Gizem Kayar in April 2026
-#  Refactored into a module so test files can reuse functions
-# Assignment completed by Matias Ortiz and Maria BSeatriz Silva
+# NYU CS 421 Numerical Computing SPH project
+# Original code by Dr. Gizem Kayar in April 2026
+# Refactored into a module so test files can reuse functions
+# Assignment completed by Matias Ortiz and Maria Beatriz Silva
 
 using LinearAlgebra
 export Params, Kernel
