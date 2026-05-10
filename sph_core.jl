@@ -265,8 +265,8 @@ end
 # -----------------------------
 function integrate_cromer!(pos, vel, accel, p::Params)
     for i in eachindex(pos)
-        vel[i] = vel[i] + p.dt * accel[i]   # update velocity first
-        pos[i] = pos[i] + p.dt * vel[i]     # then position with NEW velocity
+        vel[i] = vel[i] + p.dt * accel[i] # update velocity first
+        pos[i] = pos[i] + p.dt * vel[i] # then position with NEW velocity
         if(pos[i][1] < 0.0) # beyond left boundary
             pos[i] = [0.0, pos[i][2]] # reflect
             vel[i] = [-vel[i][1]*p.damp_wall, vel[i][2]] # reflect
@@ -286,8 +286,8 @@ end
 # -----------------------------
 function integrate_euler!(pos, vel, accel, p::Params)
     for i in eachindex(pos)
-        pos[i] = pos[i] + p.dt * vel[i]     # position uses OLD velocity
-        vel[i] = vel[i] + p.dt * accel[i]   # then velocity updated AFTER
+        pos[i] = pos[i] + p.dt * vel[i] # position uses OLD velocity
+        vel[i] = vel[i] + p.dt * accel[i] # then velocity updated AFTER
         if(pos[i][1] < 0.0) # beyond left boundary
             pos[i] = [0.0, pos[i][2]] # reflect
             vel[i] = [-vel[i][1]*p.damp_wall, vel[i][2]] # reflect
