@@ -7,7 +7,7 @@ kinetic_energy(vel, mass) = 0.5 * mass * sum(norm(v)^2 for v in vel)
 max_speed(vel) = maximum(norm.(vel))
 avg_density(rho) = sum(rho) / length(rho)
 
-# ── Experiment flags ─────────────────────────────────────
+# Pick exps to run 
 const RUN_TODO6 = false
 const RUN_TODO7 = false
 const RUN_TODO8 = false
@@ -123,16 +123,16 @@ function run_todo6()
     kern = poly6_kernel()
 
     experiments = [
-        ("Baseline (defaults)",                 default_params()),
-        ("High stiffness k=30000",              default_params(k=30000.0)),
-        ("Soft fluid k=300",                    default_params(k=300.0)),
-        ("High viscosity mu=5.0",               default_params(mu=5.0)),
-        ("Inviscid mu=0.0",                     default_params(mu=0.0)),
-        ("Strong gravity g=-30",                default_params(g=[0.0,-30.0])),
+        ("Baseline (defaults)", default_params()),
+        ("High stiffness k=30000", default_params(k=30000.0)),
+        ("Soft fluid k=300", default_params(k=300.0)),
+        ("High viscosity mu=5.0", default_params(mu=5.0)),
+        ("Inviscid mu=0.0", default_params(mu=0.0)),
+        ("Strong gravity g=-30", default_params(g=[0.0,-30.0])),
         ("Large dt=1e-4 (should be unstable?)", default_params(dt=1.0e-4)),
-        ("Elastic walls damp=1.0",              default_params(damp_wall=1.0, damp_floor=1.0)),
-        ("Sticky walls damp=0.1",               default_params(damp_wall=0.1, damp_floor=0.1)),
-        ("Dense packing dx=h/2",               default_params(dx=0.04*0.5)),
+        ("Elastic walls damp=1.0", default_params(damp_wall=1.0, damp_floor=1.0)),
+        ("Sticky walls damp=0.1", default_params(damp_wall=0.1, damp_floor=0.1)),
+        ("Dense packing dx=h/2", default_params(dx=0.04*0.5)),
     ]
 
     results = [run_experiment(label, p, kern; save_frames=true, todo=6) for (label, p) in experiments]
@@ -158,12 +158,12 @@ function run_todo8()
     kern = poly6_kernel()
     configs = [
         ("Original  w=0.4 l=0.6 dx=h*0.8", default_params()),
-        ("Wider     w=0.7 l=0.6",           default_params(w=0.7)),
-        ("Taller    w=0.4 l=0.8",           default_params(l=0.8)),
-        ("Full half w=0.9 l=0.5",           default_params(w=0.9, l=0.5)),
-        ("Full col  w=0.4 l=0.9",           default_params(l=0.9)),
-        ("Fine dx   dx=h*0.5",              default_params(dx=0.04*0.5)),
-        ("Coarse dx dx=h*1.0",              default_params(dx=0.04*1.0)),
+        ("Wider     w=0.7 l=0.6", default_params(w=0.7)),
+        ("Taller    w=0.4 l=0.8", default_params(l=0.8)),
+        ("Full half w=0.9 l=0.5", default_params(w=0.9, l=0.5)),
+        ("Full col  w=0.4 l=0.9", default_params(l=0.9)),
+        ("Fine dx   dx=h*0.5", default_params(dx=0.04*0.5)),
+        ("Coarse dx dx=h*1.0", default_params(dx=0.04*1.0)),
     ]
     results = [run_experiment(label, p, kern; save_frames=true, todo=8) for (label, p) in configs]
 
@@ -183,9 +183,9 @@ function run_todo9()
     println("TODO 9 - Naïve neighbor search vs spatial hashing")
     kern = poly6_kernel()
     configs = [
-        ("Small  Np~216  (default)",  default_params()),
-        ("Medium Np~378  w=0.7",      default_params(w=0.7)),
-        ("Large  Np~600  dx=h*0.5",   default_params(dx=0.04*0.5)),
+        ("Small  Np~216  (default)", default_params()),
+        ("Medium Np~378  w=0.7", default_params(w=0.7)),
+        ("Large  Np~600  dx=h*0.5", default_params(dx=0.04*0.5)),
     ]
     println()
     @printf "  %-28s  %5s  %10s  %10s  %8s\n" "Config" "Np" "hash sps" "naive sps" "slowdown"
@@ -204,8 +204,8 @@ function run_todo10()
     configs = [
         ("Smaller   dt=5e-6", default_params()),
         ("Default   dt=2e-5", default_params()),
-        ("Larger   dt=5e-5",           default_params(dt=5.0e-5)),
-        ("Large    dt=1e-4",           default_params(dt=1.0e-4)),
+        ("Larger   dt=5e-5", default_params(dt=5.0e-5)),
+        ("Large    dt=1e-4", default_params(dt=1.0e-4)),
         ("Very large dt=5e-4", default_params(dt=5.0e-4)),
         ("Extreme  dt=1e-3",   default_params(dt=1.0e-3)),
     ]
@@ -221,9 +221,6 @@ function run_todo10()
     end
 end
 
-# ----------
-#  Main
-# ----------
 function main()
     RUN_TODO6  && run_todo6()
     RUN_TODO7  && run_todo7()
