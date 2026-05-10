@@ -1,4 +1,6 @@
 # collect files
+# import Pkg; Pkg.add("GLMakie")
+import Pkg; Pkg.add("CSV")
 using GLMakie, CSV, DataFrames
 
 function frame_number(file)

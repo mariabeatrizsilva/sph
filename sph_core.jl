@@ -53,6 +53,10 @@ function default_params(;
     Params(w, l, something(dx, h * 0.8), h, mass, rho0, k, mu, g, dt, damp_wall, damp_floor, steps, save_every)
 end
 
+# -----------------------------
+# Kernel Definitions
+# -----------------------------
+
 # Our 3 kernel options for testing
 struct Kernel
     name  ::String
@@ -125,12 +129,20 @@ function _grad_wendland_c2(rvec, h)
     r < 1e-12 && return zeros(2)
     q = r / h
     q > 1.0 && return zeros(2)
-    α    = 7.0 / (pi*h^2)
-    dWdr = α / h * (4*(1-q)^3*(1+4q)*(-1) + (1-q)^4*4)
+    α    = 7.0 / (pi * h^2)
+    dWdr = α / h * (-20q * (1 - q)^3)   # simplified closed form
     return dWdr * (rvec / r)
 end
 
-_lap_wendland_c2(r, h) = _lap_visc(r, h)  # visc Laplacian is a good stand-in for comparison
+function _lap_wendland_c2(r, h)
+    r < 1e-12 && return 0.0
+    q = r / h
+    q > 1.0  && return 0.0
+    α = 7.0 / (pi * h^2)
+    # d/dr[r * dW/dr] / r, with dW/dr = (α/h)*(-20q)(1-q)^3
+    # = (α/h²) * (-20) * d/dq[q(1-q)³] = (α/h²)*(-20)*[(1-q)³ - 3q(1-q)²]
+    return (α / h^2) * (-20) * ((1 - q)^3 - 3q*(1 - q)^2)
+end
 
 wendland_c2_kernel() = Kernel("Wendland C2", _wendland_c2, _grad_wendland_c2, _lap_wendland_c2)
 
