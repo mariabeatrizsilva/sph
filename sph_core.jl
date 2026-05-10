@@ -305,8 +305,7 @@ end
 # -----------------------------
 # CSV output
 # -----------------------------
-function save_csv(pos, vel, rho, P, step)
-    outdir = "output"
+function save_csv(pos, vel, rho, P, step, outdir="output")
     isdir(outdir) || mkdir(outdir)
     filename = joinpath(outdir, "sph_$(lpad(step,6,'0')).csv")
     open(filename, "w") do io
@@ -338,26 +337,24 @@ end
 # -----------------------------
 # Main loop
 # -----------------------------
-function run(p::Params, kern::Kernel)
-
+function run(p::Params, kern::Kernel; outdir="output")
     pos, vel, rho, P = init_particles(p)
 
     for step in 1:p.steps
-        grid     = build_grid(pos, p)
+        grid      = build_grid(pos, p)
         neighbors = find_neighbors(pos, grid, p)
 
         compute_density!(pos, rho, neighbors, p, kern)
         compute_pressure!(rho, P, p)
-        accel    = compute_forces(pos, vel, rho, P, neighbors, p, kern)
-        integrate_cromer!(pos, vel, accel, p)
 
+        accel     = compute_forces(pos, vel, rho, P, neighbors, p, kern)
+
+        integrate_cromer!(pos, vel, accel, p)
+        
         if step % p.save_every == 0
-            println("Step $step / $(p.steps)")
-            save_csv(pos, vel, rho, P, step)
+            save_csv(pos, vel, rho, P, step, outdir)
         end
     end
-
-    println("Done (corner breaking dam).")
 end
 
 end # module SPHCore
